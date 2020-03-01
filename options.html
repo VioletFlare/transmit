@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon shortcut" href="icon.svg"> 
+    <link rel="stylesheet" type="text/css" href="options.css">
+    <title>Transmit</title>
+</head>
+<body>
+    <form>
+        <label for="RPCURL">RPC URL: </label>
+        <input type="text" id="RPCURL" placeholder="http://example.com:9091/transmission/rpc">
+        <label for="primaryDownloadDir">Primary download directory: </label>
+        <input type="text" id="primaryDownloadDir" placeholder="/media/smb/partition">
+        <label for="secondaryDownloadDir">Secondary download directory: </label>
+        <input type="text" id="secondaryDownloadDir" placeholder="/media/smb/alt-partition" disabled>
+        <button>Save</button>
+    </form>
+    <script src="options.js"></script>    
+</body>
+</html>

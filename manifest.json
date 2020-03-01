@@ -1,18 +1,27 @@
 {
     "manifest_version": 2,
     "name": "transmit",
-    "version": "1.0",
-  
-    "description": "Adds a context menu option for sending magnet urls to remote transmission clients.",
-  
+    "version": "1.1",
+    "description": "Adds a context menu option for sending magnet URLs to transmission web client.",
     "icons": {
-      "48": "icon.svg",
-      "96": "icon.svg"
+      "16": "icon/icon-16.png",
+      "32": "icon/icon-32.png",
+      "48": "icon/icon-48.png",
+      "96": "icon/icon-96.png",
+      "128": "icon/icon-128.png"
     },
-
+    "applications": {
+      "gecko": {
+        "id": "{c0e69000-58b9-446a-9936-783f2f88682e}",
+        "strict_min_version": "53.0"
+      }
+    },
+    "options_ui": {
+      "page": "options.html"
+    },
     "background": {
-      "scripts": ["transmit.js"]
+      "scripts": ["transmit-background.js"],
+      "persistent": false
     },
-
-    "permissions": ["contextMenus", "notifications", "<all_urls>"]
+    "permissions": ["contextMenus", "notifications", "storage", "<all_urls>"]
   }

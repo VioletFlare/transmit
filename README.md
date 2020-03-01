@@ -1,4 +1,5 @@
-Installation:
+Signing
+===
 
 1. Zip only the files needed by the extension like this:
 
@@ -13,3 +14,13 @@ transmit.zip
 
 ¹ - If the extension is not signed, the browser will consider it as corrupted.
 
+Installation
+===
+
+Firefox:  
+    Drag and drop the .xpi into a browser tab  
+
+Chrome:  
+    1. Clone repo  
+    2. Go to chrome://extensions/  
+    3. Click "Load Unpacked" and select the cloned folder

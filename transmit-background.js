@@ -1,11 +1,9 @@
 class Transmit {
 
     constructor() {
-        this.RPCURL = 'http://rs.lcl:9091/transmission/rpc';
-        this.downloadDir = '/media/smb/0';
         this.transmissionSessionId = '';
         this.magnetURL = '';
-        this.iconURL = browser.extension.getURL("icon.svg");
+        this.iconURL = chrome.extension.getURL("icon/icon-32.png");
     }
 
     _checkMagnetURLIsValid(URL) {
@@ -16,7 +14,7 @@ class Transmit {
     }
 
     _displayTorrentAddedNotification(message) {
-        browser.notifications.create('magnet-added-success', {
+        chrome.notifications.create('magnet-added-success', {
             type: "basic",
             iconUrl: this.iconURL,
             title: "Transmitter",
@@ -82,7 +80,7 @@ class Transmit {
 
         if (isURLValid) {
             this.magnetURL = URL;
-
+            this._loadOptions();
             this._sendRequest();
         }
     }
@@ -98,21 +96,34 @@ class Transmit {
           }
     }
 
+    _setOptions(data) {
+        if (data.options) {
+            this.RPCURL = data.options.RPCURL;
+            this.downloadDir = data.options.primaryDownloadDir;
+        }
+    }
+
+    _loadOptions() {
+        chrome.storage.sync.get(
+            ['options'], (data) => this._setOptions(data)
+        );
+    }
+
     _setEvents() {
-        browser.contextMenus.onClicked.addListener(
+        chrome.contextMenus.onClicked.addListener(
             info => this._onContextMenuItemClicked(info)
         )
     }
 
     _createContextMenuItems() {
-        browser.contextMenus.create({
+        chrome.contextMenus.create({
             id: 'text-selected',
             type: 'normal',
             title: 'Upload selected...',
             contexts: ['selection']
         });
 
-        browser.contextMenus.create({
+        chrome.contextMenus.create({
             id: 'link-selected',
             type: 'normal',
             title: 'Upload link...',
