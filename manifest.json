@@ -1,0 +1,18 @@
+{
+    "manifest_version": 2,
+    "name": "transmit",
+    "version": "1.0",
+  
+    "description": "Adds a context menu option for sending magnet urls to remote transmission clients.",
+  
+    "icons": {
+      "48": "icon.svg",
+      "96": "icon.svg"
+    },
+
+    "background": {
+      "scripts": ["transmit.js"]
+    },
+
+    "permissions": ["contextMenus", "notifications", "<all_urls>"]
+  }
