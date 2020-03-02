@@ -3,7 +3,7 @@ class Transmit {
     constructor() {
         this.transmissionSessionId = '';
         this.magnetURL = '';
-        this.iconURL = chrome.extension.getURL("icon/icon-32.png");
+        this.iconURL = chrome.extension.getURL('icon/icon-32.png');
     }
 
     _checkMagnetURLIsValid(URL) {
@@ -13,11 +13,11 @@ class Transmit {
         return isValid;
     }
 
-    _displayTorrentAddedNotification(message) {
-        chrome.notifications.create('magnet-added-success', {
-            type: "basic",
+    _displayNotification(message) {
+        chrome.notifications.create('transmit-notification', {
+            type: 'basic',
             iconUrl: this.iconURL,
-            title: "Transmitter",
+            title: 'Transmit',
             message: message,
           });
     }
@@ -42,15 +42,19 @@ class Transmit {
     }
 
     _handleResponseData(data) {
-        if (data) {
-            const torrentInfo = data.arguments["torrent-added"],
-                message = `Transmitting 📡: ${torrentInfo.name}`;
+        let torrentInfo;
 
-            this._displayTorrentAddedNotification(message);
+        if (data) {
+            torrentInfo = data.arguments['torrent-added'];
+        }
+
+        if (torrentInfo) {
+            const message = `Transmitting 📡: ${torrentInfo.name}`;
+            this._displayNotification(message);
         }
     }
 
-    _sendRequest() {
+    _createRequest() {
         const payload = {
             method: 'torrent-add',
             arguments: {
@@ -68,10 +72,24 @@ class Transmit {
             body: JSON.stringify(payload)          
         }
 
+        return request;
+    }
+
+    _handleError(error) {
+        const errorMessage = `Failed 🚫: ${error.message}`;
+
+        this._displayNotification(errorMessage);
+    }
+
+    _sendRequest() {
+        const request = this._createRequest();
+
         fetch(this.RPCURL, request).then(
             response => this._handleResponse(response)
         ).then(
             data => this._handleResponseData(data)
+        ).catch(
+            error => this._handleError(error)
         );
     }
 
@@ -80,7 +98,6 @@ class Transmit {
 
         if (isURLValid) {
             this.magnetURL = URL;
-            this._loadOptions();
             this._sendRequest();
         }
     }
@@ -96,20 +113,26 @@ class Transmit {
           }
     }
 
-    _setOptions(data) {
-        if (data.options) {
-            this.RPCURL = data.options.RPCURL;
-            this.downloadDir = data.options.primaryDownloadDir;
-        }
-    }
-
     _loadOptions() {
         chrome.storage.sync.get(
-            ['options'], (data) => this._setOptions(data)
+            ['options'], (data) => { 
+                if (data.options) this._setOptions(data.options)
+            }
         );
     }
 
+    _setOptions(options) {
+        if (options.RPCURL) this.RPCURL = options.RPCURL;
+        if (options.primaryDownloadDir) this.downloadDir = options.primaryDownloadDir;
+    }
+
     _setEvents() {
+        chrome.storage.onChanged.addListener(
+            change => {
+                if (change.options) this._setOptions(change.options.newValue)
+            }
+        );
+
         chrome.contextMenus.onClicked.addListener(
             info => this._onContextMenuItemClicked(info)
         )
@@ -132,6 +155,7 @@ class Transmit {
     }
 
     setup() {
+        this._loadOptions();
         this._createContextMenuItems();
         this._setEvents();
     }

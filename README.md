@@ -26,3 +26,15 @@ Chrome:
     1. Clone repo  
     2. Go to chrome://extensions/  
     3. Click "Load Unpacked" and select the cloned folder
+
+
+Configuration
+===
+
+Configure RPC URL and download directory:  
+
+Firefox:  
+    about:addons > transmit > ··· > Preferences  
+
+Chrome:  
+    chrome://extensions/ > transmit > Details > Extension options  
