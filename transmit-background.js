@@ -92,9 +92,7 @@ class Transmit {
 
     _initRequest() {
         try {
-            setTimeout(
-                async () => this._sendRequest(), 0
-            );
+            this._sendRequest.call(this);
         } catch (error) {
             this._handleError(error)
         }
