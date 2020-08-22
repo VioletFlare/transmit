@@ -7,13 +7,22 @@
     <title>Transmit</title>
 </head>
 <body>
+    <span>Configure whether the connection should use HTTP or HTTPS, 
+          insert the IP and port of the transmission host and provide an absolute path to the directory where files should be downloaded to on the remote machine.</span>
     <form>
-        <label for="RPCURL">RPC URL: </label>
-        <input type="text" id="RPCURL" placeholder="http://example.com:9091/transmission/rpc">
+        <label for="protocol">Protocol: </label>
+        <select id="protocol">
+            <option value="http">HTTP</option>
+            <option value="https">HTTPS</option>
+        </select>
+        <label for="ip">IP:</label>
+        <input type="text" id="ip" placeholder="0.0.0.0"></input>
+        <label for="port">Port:</label>
+        <input type="text" id="port" placeholder="9091" value="9091"></input>
         <label for="primaryDownloadDir">Primary download directory: </label>
         <input type="text" id="primaryDownloadDir" placeholder="/media/smb/partition">
-        <label for="secondaryDownloadDir">Secondary download directory: </label>
-        <input type="text" id="secondaryDownloadDir" placeholder="/media/smb/alt-partition" disabled>
+        <label for="secondaryDownloadDir" class="hidden">Secondary download directory: </label>
+        <input type="text" id="secondaryDownloadDir" class="hidden" placeholder="/media/smb/alt-partition" disabled>
         <button>Save</button>
     </form>
     <script src="options.js"></script>    

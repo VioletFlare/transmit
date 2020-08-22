@@ -11,3 +11,7 @@ form > input {
     width: 300px;
 }
 
+.hidden {
+    display: none;
+}
+
