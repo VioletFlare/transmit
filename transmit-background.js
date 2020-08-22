@@ -30,12 +30,12 @@ class Transmit {
         }, 100)
     }
 
-    _handleResponse(response) {
+    async _handleResponse(response) {
         const isStatusOK = response.status === 200,
             isHeaderExpired = response.status === 409;
 
         if (isStatusOK) {
-            return response.json();
+            return await response.json();
         } else if (isHeaderExpired) {
             this._resendRequest(response);
         }
@@ -81,16 +81,23 @@ class Transmit {
         this._displayNotification(errorMessage);
     }
 
-    _sendRequest() {
-        const request = this._createRequest();
+    async _sendRequest() {
+        const request = this._createRequest(),
+            response = await fetch(this.RPCURL, request),
+            data = await this._handleResponse(response),
+            isNotHeaderExpired = response.status !== 409;
 
-        fetch(this.RPCURL, request).then(
-            response => this._handleResponse(response)
-        ).then(
-            data => this._handleResponseData(data)
-        ).catch(
-            error => this._handleError(error)
-        );
+        if (isNotHeaderExpired) this._handleResponseData(data);
+    }
+
+    _initRequest() {
+        try {
+            setTimeout(
+                async () => this._sendRequest(), 0
+            );
+        } catch (error) {
+            this._handleError(error)
+        }
     }
 
     _parseURL(URL) {
@@ -98,7 +105,7 @@ class Transmit {
 
         if (isURLValid) {
             this.magnetURL = URL;
-            this._sendRequest();
+            this._initRequest();
         }
     }
 
