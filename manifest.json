@@ -10,6 +10,11 @@
       "96": "icon/icon-96.png",
       "128": "icon/icon-128.png"
     },
+    "applications": {
+      "gecko": {
+        "id": "{c0e69000-58b9-446a-9936-783f2f88682e}"
+      }
+    },
     "options_ui": {
       "page": "options.html"
     },
